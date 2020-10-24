@@ -32,6 +32,7 @@ if __name__ == '__main__':
             frames_per_buffer = chunk
             )
 
+    cnt = 0
     while True:
         data = stream.read(chunk)
         # nd.arrayに変換
@@ -45,19 +46,37 @@ if __name__ == '__main__':
             all = []
             all.append(data)
             # 1024サンプル
-            data = stream.read(chunk)
-            all.append(data)
+            #data = stream.read(chunk)
+            #all.append(data)
             data = b''.join(all)                    
 
             # ファイル出力
-            out = wave.open(filename,'w')
+            out = wave.open('training/nosnap/'+filename,'w')
             out.setnchannels(CHANNELS) #mono
             out.setsampwidth(2) #16bits
             out.setframerate(RATE)
             out.writeframes(data)
             out.close()
 
-            print("Saved.")
+            # ちゃんと波形出てるかチェック
+            # glaph start --------------------
+            x = np.frombuffer(data, dtype="int16") / 32768.0
+
+            plt.figure(figsize=(15,3))
+            plt.plot(x)
+            plt.savefig("wave.png")
+
+            x = np.fft.fft(np.frombuffer(data, dtype="int16"))
+            freq = np.fft.fftfreq(int(len(x)), 1/8000)
+            max_freq = int(len(x))/2
+
+            plt.figure(figsize=(15,3))
+            plt.plot(x.real[:int(len(x)/2)])
+            plt.savefig("fft.png")
+            # glaph end ---------------
+
+            cnt+=1
+            print("Saved. cnt=", cnt)
 
     stream.close()    
     p.terminate()
