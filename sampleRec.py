@@ -51,7 +51,7 @@ if __name__ == '__main__':
             data = b''.join(all)                    
 
             # ファイル出力
-            out = wave.open('training/nosnap/'+filename,'w')
+            out = wave.open('test_data/nosnap/'+filename,'w')
             out.setnchannels(CHANNELS) #mono
             out.setsampwidth(2) #16bits
             out.setframerate(RATE)
