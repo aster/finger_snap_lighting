@@ -8,12 +8,18 @@ from datetime import datetime
 import matplotlib.pyplot as plt
 
 def main():
-    learning_wav_list = [f.name for f in os.scandir('../test_data/snap') if f.is_file()]
+    dataDir = '../training/nosnap/'
+    #dataDir = '../test_data/snap/'
+    textName = 'learning_data.txt'
+    #textName = 'test_data.txt'
+    snapNosnap = 0 # 1:snap   0:nosnap
+
+    learning_wav_list = [f.name for f in os.scandir(dataDir) if f.is_file()]
     print(learning_wav_list)
     for wav_file_name in learning_wav_list:
-        data = parseWavFile('../test_data/snap/'+ wav_file_name)
+        data = parseWavFile(dataDir + wav_file_name)
         data = fft(data)
-        addText(data, 'test_data.txt', 1)
+        addText(data, textName, snapNosnap)
     
 
 # wavファイルを読み込んで正規化
